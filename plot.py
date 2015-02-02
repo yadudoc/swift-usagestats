@@ -31,9 +31,21 @@ def plotter (usage_stats, title_string):
     plt.title(title_string)
     plt.show()
 
+def aggregate_by_year(data):
+    n =0
+    yearly_data = []
+    length = len(data)
+    while True:
+        yearly = data[n*12:(n+1)*12]
+        total  = sum([ int(item[1]) for item in yearly])
+        yearly_data.append([ "{0}-{1}".format(yearly[0][0], yearly[-1][0]) , total ])
+        n += 1
+        if (n*12 > length):
+            break
+    return yearly_data
 
 def plotter_5min_monthly():
-    data   = np.loadtxt(open("longer_than_5_monthly.csv","r"),delimiter=", ", dtype=str)
+    data   = np.loadtxt(open("longerThan5minsMonthly.csv","r"),delimiter=", ", dtype=str)
     plotter(data, "Swift script runs(>5 min) by month")
 
 def plotter_unique_monthly():
@@ -45,8 +57,29 @@ def plotter_new_user():
     plotter(data, "New Swift users by month")
 
 
-plotter_5min_monthly()
-plotter_unique_monthly()
-plotter_new_user()
+def plotter_5min_yearly():
+    data   = np.loadtxt(open("longerThan5minsMonthly.csv","r"),delimiter=", ", dtype=str)
+    yearly = aggregate_by_year(data)
+    plotter(yearly, "Swift script runs(>5 min) by year")
+
+def plotter_unique_yearly():
+    data   = np.loadtxt(open("monthlyUniqueScripts.csv","r"),delimiter=", ", dtype=str)
+    yearly = aggregate_by_year(data)
+    plotter(yearly, "Unique scripts run by year")
+
+def plotter_new_user_yearly():
+    data   = np.loadtxt(open("monthlyNewUser.csv","r"),delimiter=", ", dtype=str)
+    yearly = aggregate_by_year(data)
+    plotter(yearly, "New Swift users by year")
+
+
+#plotter_5min_monthly()
+#plotter_unique_monthly()
+#plotter_new_user()
+
+plotter_5min_yearly()
+plotter_unique_yearly()
+plotter_new_user_yearly()
+
 
 exit()
